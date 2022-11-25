@@ -13,6 +13,7 @@ services:
      - bds-network
     volumes:
       - hadoop_namenode:/hadoop/dfs/name
+      - ./hadoop/hadoop-data:/hadoop-data
     environment:
       - CLUSTER_NAME=test
     env_file:
@@ -24,6 +25,7 @@ services:
     build: ./hadoop/datanode
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
+      - ./hadoop/hadoop-data:/hadoop-data
     networks:
      - bds-network
     environment:
@@ -76,20 +78,20 @@ services:
     networks:
      - bds-network
     volumes:
-      - shared-workspace:/opt/workspace
+      - ./jupyter/workspace:/opt/workspace
 
   spark-worker-1:
     build: ./spark/worker
     container_name: spark-worker-1
     environment:
       - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_MEMORY=4G
     ports:
       - 8081:8081
     networks:
      - bds-network
     volumes:
-      - shared-workspace:/opt/workspace
+      - ./jupyter/workspace:/opt/workspace
     depends_on:
       - spark-master
 
@@ -98,13 +100,43 @@ services:
     container_name: spark-worker-2
     environment:
       - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=512m
+      - SPARK_WORKER_MEMORY=4G
     networks:
      - bds-network
     ports:
       - 8082:8081
     volumes:
-      - shared-workspace:/opt/workspace
+      - ./jupyter/workspace:/opt/workspace
+    depends_on:
+      - spark-master
+
+  spark-worker-3:
+    build: ./spark/worker
+    container_name: spark-worker-3
+    environment:
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=4G
+    networks:
+     - bds-network
+    ports:
+      - 8083:8081
+    volumes:
+      - ./jupyter/workspace:/opt/workspace
+    depends_on:
+      - spark-master
+
+  spark-worker-4:
+    build: ./spark/worker
+    container_name: spark-worker-4
+    environment:
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=4G
+    networks:
+     - bds-network
+    ports:
+      - 8084:8081
+    volumes:
+      - ./jupyter/workspace:/opt/workspace
     depends_on:
       - spark-master
   
@@ -118,15 +150,15 @@ services:
     networks:
      - bds-network
     volumes:
-      - shared-workspace:/opt/workspace
+      - ./jupyter/workspace:/opt/workspace
 
 volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
-  shared-workspace:
-    name: "hadoop-distributed-file-system"
-    driver: local
+  # shared-workspace:
+  #   name: "hadoop-distributed-file-system"
+  #   driver: local
 
 networks:
   bds-network:

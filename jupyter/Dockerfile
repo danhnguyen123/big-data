@@ -54,4 +54,4 @@ RUN rm -f sparkr.tar.gz
 EXPOSE 8888
 
 WORKDIR /workspace
-CMD jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=
+CMD jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=danhnguyen123 --NotebookApp.password=danhnguyen56
