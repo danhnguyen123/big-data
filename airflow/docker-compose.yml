@@ -58,6 +58,22 @@ services:
       retries: 50
     restart: always
 
+  # airflow-init:
+  #   << : *airflow-common
+  #   container_name: airflow-init
+  #   entrypoint: /bin/bash
+  #   command:
+  #     - -c
+  #     - airflow users list || ( airflow db init &&
+  #       airflow users create
+  #         --role Admin
+  #         --username airflow
+  #         --password airflow
+  #         --email airflow@airflow.com
+  #         --firstname airflow
+  #         --lastname airflow )
+  #   restart: on-failure
+
   airflow-webserver:
     <<: *airflow-common
     command: airflow webserver
@@ -92,6 +108,22 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+
+  airflow-flower:
+    <<: *airflow-common
+    command: celery flower
+    ports:
+      - 5555:5555
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5555/"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+    # depends_on:
+    #   <<: *airflow-common-depends-on
+    #   airflow-init:
+    #     condition: service_completed_successfully
 
 networks:
   bds-network:
