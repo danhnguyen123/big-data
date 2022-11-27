@@ -1,0 +1,12 @@
+apache-airflow==2.4.0
+requests
+psycopg2
+pandas
+python-dotenv
+celery
+redis
+gspread
+flower==1.0.0
+celery-singleton
+airflow-code-editor
+sqlalchemy==1.4.44
